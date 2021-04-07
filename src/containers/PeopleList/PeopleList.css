@@ -1,0 +1,73 @@
+.page-wrapper {
+  display: flex;
+  flex-direction: column;
+  padding: 30px 40px;
+}
+
+.people-content-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.popular-card {
+  display: flex;
+  width: 235px;
+  flex-direction: column;
+  margin-bottom: 20px;
+  box-sizing: border-box;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 20%);
+  border: 1px solid rgba(227,227,227, 1);
+}
+
+.popular-card img {
+  height: 235px;
+}
+
+.popular-card .caption {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 8px 10px;
+  white-space: nowrap;
+}
+
+.popular-card h1 {
+  margin: 0;
+  padding: 0 !important;
+  font-size: 17.6px;
+  font-weight: 600;
+}
+
+.popular-card p {
+  font-weight: 400;
+  font-size: 14.4px;
+  padding: 0;
+  margin: 0;
+  color: rgba(0,0,0,0.6);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.popular-card a, .popular-card a:hover {
+  color: black !important;
+}
+
+@media screen and (max-width: 700px) {
+  .popular-people-title {
+    font-size: 20px !important;
+  }
+
+  .popular-card {
+    width: calc(50vw - 35px);
+    height: auto;
+  }
+
+  .popular-card img {
+    width: 100%;
+    height: calc(50vw - 35px);
+  }
+
+  .popular-card h1 {
+    font-size: 16px !important;
+  }
+}

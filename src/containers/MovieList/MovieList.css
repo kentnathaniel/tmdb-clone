@@ -1,0 +1,50 @@
+html {
+  --numberOfDiscoverColumns: 1;
+}
+
+@media only screen and (min-width: 700px) {
+  html {
+    --numberOfDiscoverColumns: 2;
+  }
+}
+
+@media only screen and (min-width: 900px) {
+  html {
+    --numberOfDiscoverColumns: 3;
+  }
+}
+
+@media only screen and (min-width: 1040px) {
+  html {
+    --numberOfDiscoverColumns: 4;
+  }
+}
+
+@media only screen and (min-width: 1200px) {
+  html {
+    --numberOfDiscoverColumns: 5;
+  }
+}
+
+.page-wrapper {
+  display: flex;
+  flex-direction: column;
+  padding: 30px 40px;
+}
+
+.page-content-wrapper {
+  display: flex;
+}
+
+.page-wrapper h1 {
+  font-weight: 600;
+  font-size: 25px;
+  padding-bottom: 10px;
+  text-transform: capitalize;
+}
+
+@media screen and (max-width: 700px) {
+  .page-wrapper {
+    padding: 20px;
+  }
+}

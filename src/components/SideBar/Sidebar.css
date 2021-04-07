@@ -1,0 +1,20 @@
+.sidebar {
+  position: fixed;
+  top: 64px;
+  width: 90%;
+  height: 100%;
+  background-color: white;
+  background: rgba(var(--tmdbDarkBlue), 0.9);
+  -webkit-backdrop-filter: blur(20px);
+  z-index: 1000;
+  transition: ease .3s;
+  padding: 20px;
+  box-sizing: border-box;
+  display: inline-block;
+  left: -90%;
+}
+
+.show-sidebar {
+  left: 0;
+}
+

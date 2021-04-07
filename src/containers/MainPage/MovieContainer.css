@@ -1,0 +1,16 @@
+.swiper-container {
+  max-width: 100%;
+  padding-left: 3%;
+  padding-top: 3vh;
+}
+
+.swiper-slide {
+  margin-right: 20px;
+  width: 150px;
+  background-size: cover;
+  background-position: center;
+}
+
+.swiper-slide-style-2 {
+  width: 300px;
+}

@@ -1,0 +1,273 @@
+.people-info-wrapper {
+  display: flex;
+  padding: 30px 40px;
+}
+
+.people-detail-side-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 300px;
+}
+
+.people-detail-side-info img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  align-items: center;
+  justify-content: center;
+  background-color: #dbdbdb;
+  background-size: 50%;
+  background-position: center center;
+  background-repeat: no-repeat;
+  overflow: hidden;
+}
+
+.people-detail-side-info .no-image {
+  width: 300px;
+  height: 450px;
+  background-image: url('/src/assets/no-person.svg');
+}
+
+.people-detail-side-info .visit-info {
+  margin: 30px 0px;
+}
+
+.people-detail-side-info h2 {
+  font-size: 20.8px;
+  font-weight: 600;
+  margin: 0;
+  margin-bottom: 8px;
+}
+
+.people-detail-side-info h3 {
+  margin-bottom: 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.people-detail-side-info p {
+  margin: 0;
+}
+
+.people-side-info-content {
+  margin-bottom: 20px;
+}
+
+.people-detail-main-info {
+  display: flex;
+  flex-direction: column;
+  padding-left: 30px;
+}
+
+.people-detail-main-info h1 {
+  font-weight: 600;
+  font-size: 35.2px;
+}
+
+.people-detail-main-info h2 {
+  font-weight: 600;
+  font-size: 20.8px;
+}
+
+.full {
+  width: 100%;
+}
+
+.biography-wrapper {
+  margin-top: 30px;
+  width: 65vw;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+}
+
+
+@media screen and (max-width: 700px) {
+  .people-info-wrapper {
+    flex-direction: column;
+    padding: 20px 0px;
+  }
+
+  .people-detail-side-info {
+    padding: 0px 20px;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .people-detail-side-info img {
+    width: 35vw;
+    height: 35vw;
+    margin-bottom: 20px;
+  }
+
+  .people-detail-side-info h1 {
+    text-align: center;
+    font-weight: 700;
+    font-size: 35px;
+  }
+
+  .people-detail-side-info .visit-info {
+    margin-top: 0;
+  }
+
+  .people-side-info-content {
+    width: 50%;
+  }
+
+  .people-detail-side-info section {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .people-detail-main-info {
+    padding-left: 0;
+  }
+
+  .biography-wrapper {
+    padding: 0 20px;
+    width: 98%;
+    margin-top: 0;
+    line-height: 22px;
+  }
+}
+
+/* Known For */
+.known-for-wrapper {
+  display: flex;
+  flex-direction: column;
+  width: 65vw;
+}
+
+.known-for-wrapper .swiper-container {
+  margin: 0;
+}
+
+@media screen and (max-width: 700px) {
+  .known-for-wrapper {
+    width: 100%;
+    padding: 0 20px;
+  }
+}
+
+.known-for-wrapper .swiper-container {
+  max-width: 100%;
+  padding-top: 0vh;
+  padding-left: 0px;
+}
+
+.known-for-wrapper .swiper-slide {
+  margin-right: 0px;
+  height: auto;
+  background-size: cover;
+  background-position: center;
+  overflow: visible;
+}
+
+.people-movie-container a {
+  color: black;
+}
+
+.people-movie-container {
+  display: flex;
+  overflow: hidden;
+  align-items: center;
+  flex-direction: column;
+  flex-wrap: wrap;
+  width: 130px;
+  height: auto;
+  margin: 10px;
+  margin-right: 4px;
+  margin-left: 0px;
+  border-radius: 8px;
+  padding-bottom: 10px;
+  background-color: #fff;
+}
+
+.people-movie-container img {
+  width: 100%;
+  border-radius: 8px;
+}
+
+.people-movie-container p {
+  margin: 0;
+  padding: 0;
+  text-align: center;
+  font-size: 14.4px;
+  font-weight: 400;
+  margin-top: 5px;
+}
+
+.people-movie-container p:hover {
+  color: rgba(var(--tmdbLightBlue), 1);
+  cursor: pointer;
+}
+
+/* Acting */
+.acting-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.acting-wrapper p {
+  font-size: 20px;
+  color: black;
+}
+
+.acting-wrapper table {
+  width: 100%;
+  height: auto;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 10%);
+  border: 1px solid rgba(227,227,227, 1);
+  background-color: #fff;
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+.acting-wrapper tbody {
+  display: table-row-group;
+  vertical-align: middle;
+  border-color: inherit;
+}
+
+.acting-wrapper tr {
+  display: table-row;    
+  vertical-align: middle;
+  border-color: inherit;
+}
+
+.column-border {
+  box-shadow: 0 2px 8px rgb(0 0 0 / 10%);
+  border: 1px solid rgba(227,227,227, 1);
+}
+
+.column-border td {
+  padding: 8px 16px;
+}
+
+.column-border a {
+  color: black;
+  font-weight: 600;
+}
+
+.column-border a:hover {
+  color: rgba(var(--tmdbLightBlue), 1);
+}
+
+.column-border span {
+  color: rgba(0,0,0,0.5);
+}
+
+@media screen and (max-width: 700px) {
+  .acting-wrapper h2 {
+    padding-left: 20px;
+  }
+
+  .acting-wrapper table {
+    box-shadow: none;
+  }
+
+  .column-border {
+    box-shadow: none;
+  }
+}

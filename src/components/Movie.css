@@ -1,0 +1,139 @@
+.poster-container-1, .poster-container-3, .poster-container-2 {
+  display: flex;
+  overflow: hidden;
+  min-height: 225px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 5%;
+  box-shadow: 0px 0px 2px #888888;
+  background-color: #e7e7e7;
+  margin-bottom: 5%;
+}
+
+.poster-container-loading {
+  animation-name: loading;
+  opacity: 0.7;
+  animation-duration: 2s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}
+
+@keyframes loading {
+  0% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 0.7;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.poster-container-1 img, .poster-container-3 img  {
+  width: 100%;
+  height: 100%;
+}
+
+.poster-container-loading img {
+  width: 50%;
+  height: auto;
+}
+
+.poster-container-2 {
+  min-height: 160px;
+  transition: all .1s ease-in-out;
+  transform: scale(1);
+}
+
+.poster-container-2:hover {
+  transform: scale(1.05);
+}
+.poster-container-2 span {
+  transition: all .1s ease-in-out;
+  transform: scale(1);
+}
+
+.poster-container-2:hover span {
+  transform: scale(1.10);
+}
+
+/* Captions Styling */
+
+.caption-styling a {
+  color: black;
+}
+
+.caption-styling h2 {
+  margin: 0;
+}
+
+.caption-styling p {
+  color : rgba(0,0,0,0.6);
+}
+
+.caption-styling a:hover {
+  color: rgba(var(--tmdbLightBlue), 1);
+}
+
+.caption-styling-2, .caption-styling-2 a {
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  color: white;
+}
+
+.caption-styling-2 a {
+  font-size: 19.2px;
+}
+
+.caption-styling-2 p {
+  color: white;
+}
+
+.caption-styling-2 a:hover {
+  color: white;
+  opacity: 0.7;
+}
+
+.caption-styling-2 h2 {
+  text-align: center;
+}
+
+.span-style-2 {
+  width: 64px;
+  height: 64px;
+  background-image: url('/src/assets/play-logo.svg');
+  z-index: 200;
+  filter: invert(1);
+  position: absolute;
+}
+
+.caption-styling-1 .wrapper-rating, .caption-styling-3 .wrapper-rating {
+  position: absolute;
+  top: 250px;
+}
+
+.caption-styling .wrapper-rating {
+  width: 38px;
+  height: 38px;
+}
+
+.caption-styling .wrapper-rating p {
+  color: white;
+  font-size: 11px;
+}
+
+.caption-styling .inner-2 {
+  border-width: 2px;
+}
+
+.caption-styling h2 {
+  margin-top: 20px;
+}
+
+.caption-styling-2 h2 {
+  margin-top: 0px;
+}

@@ -1,0 +1,14 @@
+.selector-style-2 {
+  position: absolute;
+  border-radius: 15px;
+  background: linear-gradient(to right, rgba(var(--tmdbLighterGreen), 1) 0%, rgba(var(--tmdbLightGreen), 1) 100%);
+}
+
+.selector-style-2 .selected {
+  background: linear-gradient(to right, rgba(var(--tmdbLighterGreen), 1) 0%, rgba(var(--tmdbLightGreen), 1) 100%);
+}
+
+.selector-style-2 .selected h3 {
+  background: rgba(var(--tmdbDarkBlue), 1);
+  -webkit-background-clip: text;
+}

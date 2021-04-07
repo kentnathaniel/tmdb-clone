@@ -1,0 +1,257 @@
+/* Header Style */
+header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: rgba(var(--tmdbDarkBlue), 1);
+  height: 64px;
+  width: 100%;
+  z-index: 10;
+  transition: top 0.2s linear;
+}
+
+header img {
+  aspect-ratio: auto 154 / 20;
+  height: 20px;
+  margin-right: 25px;
+}
+
+header nav {
+  display: flex;
+}
+
+header nav ul {
+  margin: 0px;
+  padding: 0px;
+}
+
+.header-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  top: 0;
+  left: 0;
+  max-width: var(--maxPrimaryPageWidth);
+  width: 100%;
+  padding: 0 40px;
+  color: white;
+}
+
+header ul {
+  display: flex;
+  flex-direction: row;
+  font-size: 16px;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+header li {
+  list-style-type: none;
+  font-family: 'Source Sans Pro';
+  font-size: 16px;
+  font-weight: 600;
+  margin-right: 30px;
+}
+
+#no-caret::after{
+  display: none;
+}
+
+#no-caret {
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+@media screen and (max-width: 650px) {
+  #no-caret {
+    color: white;
+    font-size: 20.8px;
+    font-weight: 600;
+    padding: 0px;
+    display: block;
+  }
+
+  .nav-item:focus {
+    outline: none;
+  }
+}
+
+header li:hover {
+  cursor: pointer;
+}
+
+.hamburger-button {
+  display: flex;
+}
+
+.hamburger-button span {
+  height: 22.4px;
+  width: 22.4px;
+  background-image: url('https://www.themoviedb.org/assets/2/v4/glyphicons/basic/glyphicons-basic-600-menu-7ef6e3f4266b4b216a8ef5920da43fc8c96e1ee805a219c5628fed5bfac854d5.svg');
+  filter: invert(1);
+}
+
+.image-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+@media screen and (max-width: 650px) {
+  header img {
+    aspect-ratio: auto 55 / 40;
+    height: 40px;
+    margin: 0;
+  }
+
+  .image-wrapper {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .header-wrapper {
+    justify-content:space-between;
+    padding: 20px;
+  }
+}
+
+@media screen and (min-width: 650px) {
+  .hamburger-button {
+    display: none;
+  }
+}
+
+.search-span {
+  display: inline-flex;
+  background-image: url('/src/assets/search.svg');
+  height: 30px;
+  width: 30px;
+  background-position: center center;
+  background-repeat: no-repeat;
+  box-sizing: border-box;
+}
+
+.search-span:hover {
+  cursor: pointer;
+}
+
+.hide-image {
+  background-image: url('/src/assets/menu-close.svg');
+  filter: invert(1);
+}
+
+/* Search bar */
+
+.search-bar-header {
+  position: fixed;
+  background-color: white;
+  border-bottom: 1px solid rgba(227,227,227, 1);
+  width: 100%;
+  height: 44px;
+  padding: 0px 40px;
+  flex-direction: column;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.search-bar-header form {
+  width: 100%;
+  display: block;
+  margin: 0px 40px;
+}
+
+.search-bar-header label {
+  width: 100%;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.search-bar-header span {
+  width: 100% !important;
+  z-index: 100;
+  height: 24px;
+  display: flex;
+  align-content: center;
+  align-items: center;
+  background-image: url('/src/assets/search-icon.svg');
+  background-repeat: no-repeat;
+  background-position: left center;
+}
+
+.search-bar-header input {
+  width: 100%;
+  margin: 0;
+  display: flex;
+  background-color: transparent;
+  border-style: none;
+  padding-left: 30px;
+  font-style: italic;
+}
+
+/* Search Bar Result */
+.search-bar-result {
+  display: flex;
+  width: 100%;
+  top: 108px;
+  position: fixed;
+  background: white;
+  z-index: 1000;
+}
+
+.search-bar-result ul {
+  width: 100%;
+  margin-bottom: 0;
+}
+
+.search-bar-result a {
+  color: black;
+  display: inline-flex;
+}
+
+.search-bar-result a:hover {
+  color: black;
+}
+
+.search-bar-result li {
+  display: flex;
+  flex-direction: row;
+  list-style-type: none;
+  width: 100%;
+  padding: 0 40px;
+  border-bottom: 1px solid rgba(227,227,227, 1);
+  margin: 0;
+}
+
+.search-bar-result p {
+  margin: 0;
+  font-size: 18px;
+  line-height: normal;
+  margin-top: 4px;
+  margin-bottom: 4px;
+}
+
+.search-bar-result .search-icon {
+  display: flex;
+  margin-right: 6px;
+  background-image: url('/src/assets/search-icon.svg');
+  height: 24px;
+  width: 24px;
+}
+
+.hide-search-bar {
+  position: fixed;
+  display: none;
+}
+
+.no-results {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-content: center;
+}

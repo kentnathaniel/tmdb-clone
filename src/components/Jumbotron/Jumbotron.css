@@ -1,0 +1,102 @@
+/* Jumbotron Component Style */
+
+.my-jumbotron {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  padding: 30px 40px;
+  min-height: 300px;
+  height: calc(100vh / 2.5);
+  max-height: 360px;
+  color: white;
+  background: linear-gradient(to right, rgba(var(--tmdbDarkBlue), 0.8) 0%, rgba(var(--tmdbDarkBlue), 0) 100%), url('https://www.themoviedb.org/t/p/w1920_and_h600_multi_faces_filter(duotone,032541,01b4e4)/8bcoRX3hQRHufLPSDREdvr3YMXx.jpg');
+}
+
+@media screen and (max-width:450px) {
+  .my-jumbotron {
+    padding: 20px 20px;
+  }
+}
+
+.jumbotron-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.content {
+  display: block;
+  width: 100%;
+  align-items: flex-start;
+  align-content: flex-start;
+  margin-bottom: 20px;
+}
+
+.display-3 {
+  font-size: 48px;
+  font-weight: 700;
+  line-height: 1;
+  margin: 0;
+  margin-bottom: 1px;
+}
+
+.content h2 {
+  font-size: 32px;
+  margin: 0;
+}
+
+/* Jumbotron Component Style - Search */
+
+.search {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  margin-top: 30px;
+}
+
+.search form {
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+@media screen and (max-width:527px) {
+  .search {
+    margin-top: 10px;
+  }
+}
+
+.search label {
+  cursor: default;
+}
+
+input:focus {
+  outline: none;
+}
+
+.input-bar {
+  width: 100%;
+  height: 46px;
+  line-height: 46px;
+  font-size: 1.1em;
+  color: rgba(0,0,0,0.5);
+  border: none;
+  border-radius: 30px;
+  padding: 10px 20px;
+}
+
+.submit-bar {
+  display: inline-flex;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+  height: 46px;
+  padding: 10px 26px;
+  border: none;
+  background: linear-gradient(to right, rgba(var(--tmdbLightGreen), 1) 0%, rgba(var(--tmdbLightBlue), 1) 100%);
+  border-radius: 30px;
+  position: absolute;
+  top: 0;
+  right: -1px;
+  color: #fff;
+  font-weight: 700;
+}
