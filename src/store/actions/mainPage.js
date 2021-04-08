@@ -204,8 +204,8 @@ export const fetchUpcomingMovies = () => {
       })
       dispatch(fetchUpcomingMoviesSuccess(data))
     }
-    catch {
-      console.log('error')
+    catch (err) {
+      console.log(err)
     }
   }
 }

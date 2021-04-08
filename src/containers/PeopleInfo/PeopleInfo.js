@@ -70,10 +70,11 @@ const ActingDetails = ({ personDetails }) => {
             {castsAtYear.year || '—'}
           </td>
           <td>
-            <Link onClick={() => {
-              dispatch(actions.fadePage())
-              console.log(cast.media_type, cast.id)
-            }} to={`/${cast.media_type}/${cast.id}`}>{cast.title}</Link> {cast.character ? <span>as</span> : null} {cast.character}
+            <Link
+              onClick={() => {
+                dispatch(actions.fadePage())
+              }}
+              to={`/${cast.media_type}/${cast.id}`}>{cast.title}</Link> {cast.character ? <span>as</span> : null} {cast.character}
           </td>
         </tr>)
       }
@@ -212,11 +213,13 @@ const PeopleInfo = (props) => {
                 .map(cast => <SwiperSlide key={'_' + Math.random().toString(36).substr(2, 9)}>
                   <div className='people-movie-container'>
                     <Link
-                      onClick={() => dispatch(actions.fadePage())}
+                      onClick={() => {
+                        dispatch(actions.fadePage())
+                      }}
                       to={`/${cast.media_type}/${cast.id}`}>
                       <img
                         alt={cast.title || cast.name}
-                        src={`${MOVIE_IMAGE_URL}${cast.poster_path}`}></img>
+                        src={cast.poster_path ? `${MOVIE_IMAGE_URL}${cast.poster_path}` : null}></img>
                     </Link>
                     <Link onClick={() => dispatch(actions.fadePage())} to={`/${cast.media_type}/${cast.id}`}><p>{cast.title || cast.name}</p></Link>
                   </div>

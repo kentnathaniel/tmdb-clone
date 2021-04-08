@@ -16,50 +16,28 @@ const IMAGE_URL = 'https://themoviedb.org/t/p/w300_and_h450_bestv2/'
 const BASE_URL = `https://api.themoviedb.org/3`
 const API_KEY = `79ff1b0d338aa1ba767e1c7c2f1240e6`
 
-const filterCrew = (crew) => {
-  return crew.filter(crew => {
-    return ['Director', 'Writer', 'Story', 'Screenplay', 'Characters', 'Novel'].includes(crew.job)
-  })
-    .sort((a, b) => {
-      if (a.job > b.job)
-        return 1
-      else if (a.job < b.job)
-        return -1
-      else
-        return 0
-    })
-    .reduce((accCrews, curCrew) => {
-      let indexOfCrew = accCrews.findIndex(accCrew => curCrew.name === accCrew.name)
-      if (indexOfCrew === -1) {
-        accCrews.push({ ...curCrew, jobs: [curCrew.job] })
-      } else {
-        accCrews[indexOfCrew].jobs.push(curCrew.job)
-      }
-      return accCrews
-    }, [])
-    .sort((a, b) => {
-      if (a.jobs.length > b.jobs.length)
-        return -1
-      else if (a.jobs.length < b.jobs.length)
-        return 1
-      else
-        return 0
-    })
-}
+const MovieInfoContext = React.createContext({
+  width: 0,
+  details: null,
+  id: null,
+  genre: null
+})
 
-const Facts = ({ details }) => {
-  let date = details.release_date || details.first_air_date
-  let runtime = details.runtime ?
-    details.runtime :
-    details.episode_run_time ?
-      details.episode_run_time[0] : 0
+const Facts = () => {
+  const movieInfoContext = useContext(MovieInfoContext)
+
+  let date = movieInfoContext.details.release_date || movieInfoContext.details.first_air_date
+  let runtime = movieInfoContext.details.runtime ?
+    movieInfoContext.details.runtime :
+    movieInfoContext.details.episode_run_time ?
+      movieInfoContext.details.episode_run_time[0] : 0
   let hour = Math.floor(runtime / 60) === 0 ? null : `${Math.floor(runtime / 60)}h`
 
   return (
     <div className='facts'>
       <p>{moment(date).format('DD/MM/YYYY')}</p>
       <span className='fact fact-genre'>
-        {details.genres.map((genre, idx, arr) => {
+        {movieInfoContext.details.genres.map((genre, idx, arr) => {
           return <div
             key={'_' + Math.random().toString(36).substr(2, 9)}
           >
@@ -77,14 +55,14 @@ const Facts = ({ details }) => {
   )
 }
 
-const Title = ({ details }) => {
-  const widthContext = useContext(WidthContext)
+const Title = () => {
+  const movieInfoContext = useContext(MovieInfoContext)
 
-  let date = details.release_date || details.first_air_date
+  let date = movieInfoContext.details.release_date || movieInfoContext.details.first_air_date
   let media_type = null
 
 
-  if (details.name) {
+  if (movieInfoContext.details.name) {
     media_type = 'tv'
   } else {
     media_type = 'movie'
@@ -93,160 +71,228 @@ const Title = ({ details }) => {
   return (
     <div className='title-info'>
       <h1>
-        <Link onClick={() => actions.fadePage()} to={`/${media_type}/${details.id}`}>{`${details.title || details.name} `}</Link>
+        <Link onClick={() => actions.fadePage()} to={`/${media_type}/${movieInfoContext.details.id}`}>{`${movieInfoContext.details.title || movieInfoContext.details.name} `}</Link>
         {date ? <span> ({date.slice(0, 4)})</span> : <span>(-)</span>}
       </h1>
-      {widthContext.width > 700 ? <Facts details={details}></Facts> : null}
+      {movieInfoContext.width > 700 ? <Facts></Facts> : null}
     </div>
   )
 }
 
-const Actions = ({ details, props }) => {
-  const id = props.match.params.id.match(/^[0-9]*/)
-  const genre = props.match.params.genre
+const Actions = () => {
+  const movieInfoContext = useContext(MovieInfoContext)
   const dispatch = useDispatch()
   const [trailerUrl, setTrailerUrl] = useState(null)
 
-  const widthContext = useContext(WidthContext)
+  const fetchTrailerUrl = async (url) => {
+    try {
+      const { data } = await axios.get(url)
+      return data.results.length > 0 ? `https://www.youtube.com/watch?v=${data.results[0].key}` : null
+    } catch (err) {
+      console.log(err)
+    }
+  }
 
   useEffect(() => {
     async function fetching() {
-      setTrailerUrl(await fetchTrailerUrl(`${BASE_URL}/${genre}/${id}/videos?api_key=${API_KEY}`))
+      setTrailerUrl(await fetchTrailerUrl(`${BASE_URL}/${movieInfoContext.genre}/${movieInfoContext.id}/videos?api_key=${API_KEY}`))
     }
 
     fetching()
-  }, [id, genre])
+  }, [movieInfoContext.id, movieInfoContext.genre])
 
   return (
     <div className='action-info'>
       <div className='action-rating-wrapper'>
-        <RatingCircle rating={details.vote_average * 10}></RatingCircle>
+        <RatingCircle rating={movieInfoContext.details.vote_average * 10}></RatingCircle>
         <div className='action-text'>
           User
-        {widthContext.width > 700 ? <br /> : ' '}
+        {movieInfoContext.width > 700 ? <br /> : ' '}
         Score
       </div>
       </div>
-      {widthContext.width > 700 ? null : <div className='pipe'></div>}
-      <div
+      {movieInfoContext.width > 700 ? null : <div className='pipe'></div>}
+      {trailerUrl ? <div
         className='trailer-button'
-        onClick={() => dispatch(actions.showYoutubeModal(trailerUrl, (details.title || details.name)))}
+        onClick={() => dispatch(actions.showYoutubeModal(trailerUrl, (movieInfoContext.details.title || movieInfoContext.details.name)))}
       >
         <span></span>
-        Play Trailer</div>
+        Play Trailer</div> : null}
     </div>
   )
 }
 
-const OverviewInfo = ({ details }) => {
-  const filteredCrew = filterCrew(details.credits.crew)
+const OverviewInfo = () => {
+  const movieInfoContext = useContext(MovieInfoContext)
+  const [filteredCrew, setFilteredCrew] = useState(null)
+
+  const filterCrew = useCallback((crew) => {
+    return crew.filter(crew => {
+      return ['Director', 'Writer', 'Story', 'Screenplay', 'Characters', 'Novel'].includes(crew.job)
+    })
+      .sort((a, b) => {
+        if (a.job > b.job)
+          return 1
+        else if (a.job < b.job)
+          return -1
+        else
+          return 0
+      })
+      .reduce((accCrews, curCrew) => {
+        let indexOfCrew = accCrews.findIndex(accCrew => curCrew.name === accCrew.name)
+        if (indexOfCrew === -1) {
+          accCrews.push({ ...curCrew, jobs: [curCrew.job] })
+        } else {
+          accCrews[indexOfCrew].jobs.push(curCrew.job)
+        }
+        return accCrews
+      }, [])
+      .sort((a, b) => {
+        if (a.jobs.length > b.jobs.length)
+          return -1
+        else if (a.jobs.length < b.jobs.length)
+          return 1
+        else
+          return 0
+      })
+  }, [])
+
+  useEffect(() => {
+    setFilteredCrew(filterCrew(movieInfoContext.details.credits.crew))
+  }, [filterCrew, movieInfoContext])
 
   return (
     <div className='overview-info'>
-      <p className='tagline'>{details.tagline}</p>
+      <p className='tagline'>{movieInfoContext.details.tagline}</p>
       <h3>Overview</h3>
-      <p>{details.overview}</p>
+      <p>{movieInfoContext.details.overview}</p>
       <div className='overview-crew-info'>
         <ol>
-          {filteredCrew.map((crew) => (
+          {filteredCrew ? filteredCrew.map((crew) => (
             <div
               key={'_' + Math.random().toString(36).substr(2, 9)}
               className='crew-list'>
-              <Link to={`/person/${crew.id}`}>{crew.name}</Link>
+              <a href={`/person/${crew.id}`}>{crew.name}</a>
               <p>{crew.jobs.join(', ')}</p>
             </div>
-          ))}
+          )) : null}
         </ol>
       </div>
     </div>
   )
 }
 
-const DetailInfo = ({ details, props }) => {
-  const widthContext = useContext(WidthContext)
+const DetailInfo = () => {
+  const movieInfoContext = useContext(MovieInfoContext)
 
   return (
     <div className='detail-info'>
-      <Title details={details}></Title>
-      <Actions props={props} details={details}></Actions>
-      {widthContext.width > 700 ? null : <Facts details={details}></Facts>}
-      <OverviewInfo details={details}></OverviewInfo>
+      <Title></Title>
+      <Actions></Actions>
+      {movieInfoContext.width > 700 ? null : <Facts></Facts>}
+      <OverviewInfo></OverviewInfo>
     </div>
   )
 }
 
-const Casts = ({ casts }) => {
+const Casts = () => {
   const dispatch = useDispatch()
+  const movieInfoContext = useContext(MovieInfoContext)
 
   return (
     <div className='cast'>
       <h3 style={{ fontWeight: '600', fontSize: '22.4px' }}>Top Billed Cast</h3>
-      <Swiper slidesPerView={'auto'}>
-        {casts.slice(0, 10).map(cast => {
-          return (
-            <SwiperSlide
-              key={'_' + Math.random().toString(36).substr(2, 9)}
-            >
-              <div className='profile-container'>
-                <div
-                  className={`profile-image-container`}>
-                  <Link to={`/person/${cast.id}`} onClick={() => dispatch(actions.fadePage())}>
-                    {
-                      cast.profile_path ?
-                        <img
-                          src={`${BASE_PROFILE_URL}${cast.profile_path}`}
-                          alt={cast.name}></img>
-                        : <div className='no-person-image'>
-                        </div>
-                    }
-                  </Link>
+      { movieInfoContext.details.credits.cast.length > 0 ?
+        <Swiper slidesPerView={'auto'}>
+          {movieInfoContext.details.credits.cast.slice(0, 10).map(cast => {
+            return (
+              <SwiperSlide
+                key={'_' + Math.random().toString(36).substr(2, 9)}
+              >
+                <div className='profile-container'>
+                  <div
+                    className={`profile-image-container`}>
+                    <Link to={`/person/${cast.id}`}
+                      onClick={() => {
+                        dispatch(actions.fadePage())
+                      }}>
+                      {
+                        cast.profile_path ?
+                          <img
+                            src={`${BASE_PROFILE_URL}${cast.profile_path}`}
+                            alt={cast.name}></img>
+                          : <div className='no-person-image'>
+                          </div>
+                      }
+                    </Link>
+                  </div>
+                  <div className='cast-info'>
+                    <Link to={`/person/${cast.id}`} onClick={() => dispatch(actions.fadePage())}>
+                      <p className='cast-name'>{cast.name}</p>
+                    </Link>
+                    <p>{cast.character}</p>
+                  </div>
                 </div>
-                <div className='cast-info'>
-                  <Link to={`/person/${cast.id}`} onClick={() => dispatch(actions.fadePage())}>
-                    <p className='cast-name'>{cast.name}</p>
-                  </Link>
-                  <p>{cast.character}</p>
-                </div>
-              </div>
-            </SwiperSlide>)
-        })}
-      </Swiper>
+              </SwiperSlide>)
+          })}
+        </Swiper>
+        : <p>We don't have any cast added to this movie.</p>
+      }
     </div>
   )
 }
 
-const SideInfo = ({ details }) => {
-  let keywords = details.keywords.keywords || details.keywords.results
+const SideInfo = () => {
+  const movieInfoContext = useContext(MovieInfoContext)
+  const keywords = movieInfoContext.details.keywords.keywords || movieInfoContext.details.keywords.results
+
+  let keywordsRender = null
+  if (keywords.length > 0) {
+    keywordsRender = (
+      <ul>
+        {
+          keywords.map(keyword => <li
+            key={'_' + Math.random().toString(36).substr(2, 9)}
+          >{keyword.name}</li>)
+        }
+      </ul>
+    )
+  } else {
+    keywordsRender = (
+      <p> No keywords have been added. </p>
+    )
+  }
+
   return (
     <div className='side-info'>
       <div className='visit-info'>
-        {details.external_ids.facebook_id ?
+        {movieInfoContext.details.external_ids.facebook_id ?
           <div className='icons'>
             <a target='_blank'
               rel="noreferrer"
               className='external-links'
-              href={`https://facebook.com/${details.external_ids.facebook_id}`}>
+              href={`https://facebook.com/${movieInfoContext.details.external_ids.facebook_id}`}>
               <span className='facebook-icon'></span>
             </a>
           </div>
           : null}
-        {details.external_ids.twitter_id ?
+        {movieInfoContext.details.external_ids.twitter_id ?
           <div className='icons'>
             <a target='_blank'
               rel="noreferrer"
               className='external-links'
-              href={`https://twitter.com/${details.external_ids.twitter_id}`}>
+              href={`https://twitter.com/${movieInfoContext.details.external_ids.twitter_id}`}>
               <span className='twitter-icon'></span>
             </a>
           </div>
           : null}
-        {details.external_ids.instagram_id ?
+        {movieInfoContext.details.external_ids.instagram_id ?
           <div className='icons'>
             <a
               rel="noreferrer"
               target='_blank'
               className='external-links'
-              href={`https://instagram.com/${details.external_ids.instagram_id}`}>
+              href={`https://instagram.com/${movieInfoContext.details.external_ids.instagram_id}`}>
               <span className='insta-icon'></span>
             </a>
           </div>
@@ -254,23 +300,23 @@ const SideInfo = ({ details }) => {
       </div>
       <h1>Facts</h1>
       <h2> Status</h2>
-      <p> {details.status}</p>
+      <p> {movieInfoContext.details.status}</p>
       <h2> Original Language</h2>
-      <p> {language[details.original_language].name}</p>
-      {details.budget ?
+      <p> {language[movieInfoContext.details.original_language].name}</p>
+      {movieInfoContext.details.budget ?
         <>
           <h2> Budget</h2>
-          <p> {details.budget.toLocaleString('en-US', {
+          <p> {movieInfoContext.details.budget.toLocaleString('en-US', {
             style: 'currency',
             currency: 'USD',
           })}</p>
         </>
         : null
       }
-      {details.revenue ?
+      {movieInfoContext.details.revenue ?
         <>
           <h2> Revenue</h2>
-          <p> {details.revenue === 0 ? '-' : details.revenue.toLocaleString('en-US', {
+          <p> {movieInfoContext.details.revenue === 0 ? '-' : movieInfoContext.details.revenue.toLocaleString('en-US', {
             style: 'currency',
             currency: 'USD',
           })}</p>
@@ -280,64 +326,49 @@ const SideInfo = ({ details }) => {
       {keywords ?
         <>
           <h2> Keywords </h2>
-          <ul>
-            {keywords.map(keyword => <li
-              key={'_' + Math.random().toString(36).substr(2, 9)}
-            >{keyword.name}</li>)}
-          </ul>
+          {keywordsRender}
         </> : null}
     </div>
   )
 }
 
-const GeneralInfo = ({ details, props }) => {
-  const widthContext = useContext(WidthContext)
+const GeneralInfo = () => {
+  const movieInfoContext = useContext(MovieInfoContext)
 
   return (
     <>
-      { widthContext.width > 700 ?
+      { movieInfoContext.width > 700 ?
         <div
-          style={{ backgroundImage: `url('${BASE_BACKGROUND_URL}${details.backdrop_path}')` }}
+          style={{ backgroundImage: `url('${BASE_BACKGROUND_URL}${movieInfoContext.details.backdrop_path}')` }}
           className='jumbotron-info-wrapper'>
           <div className='gradient-jumbotron'>
             <div
               className='image-info'>
               <img
-                alt={details.name || details.title}
-                src={details.poster_path ? `${IMAGE_URL}${details.poster_path}` : NoImage}></img>
+                alt={movieInfoContext.details.name || movieInfoContext.details.title}
+                src={movieInfoContext.details.poster_path ? `${IMAGE_URL}${movieInfoContext.details.poster_path}` : NoImage}></img>
             </div>
-            <DetailInfo props={props} details={details}></DetailInfo>
+            <DetailInfo></DetailInfo>
           </div>
         </div> :
         <div
           className='info-wrapper-700px'>
           <div
             className='image-info-700px'
-            style={{ backgroundImage: `url('${BASE_BACKGROUND_URL}${details.backdrop_path}')` }}>
+            style={{ backgroundImage: `url('${BASE_BACKGROUND_URL}${movieInfoContext.details.backdrop_path}')` }}>
             <div className='gradient-700px'></div>
             <img
-              alt={details.name || details.title}
-              src={`${IMAGE_URL}${details.poster_path}`}></img>
+              alt={movieInfoContext.details.name || movieInfoContext.details.title}
+              src={`${IMAGE_URL}${movieInfoContext.details.poster_path}`}></img>
           </div>
-          <DetailInfo props={props} details={details}></DetailInfo>
+          <DetailInfo></DetailInfo>
         </div>
       }
     </>
   )
 }
 
-const WidthContext = React.createContext({
-  width: 0
-})
-
-const fetchTrailerUrl = async (url) => {
-  const { data } = await axios.get(url)
-  return data.results ? `https://www.youtube.com/watch?v=${data.results[0].key}` : null
-}
-
 const MovieInfo = (props) => {
-  const id = props.match.params.id.match(/^[0-9]*/)
-  const genre = props.match.params.genre
   const [width, setWidth] = useState(0)
   const details = useSelector(state => state.details)
 
@@ -350,31 +381,40 @@ const MovieInfo = (props) => {
   useEffect(() => {
     updateDimensions()
     window.addEventListener('resize', updateDimensions)
+
+    return () => {
+      window.removeEventListener('resize', updateDimensions)
+    }
   }, [updateDimensions])
 
   useEffect(() => {
+    const id = props.match.params.id.match(/^[0-9]*/)
+    const genre = props.match.params.genre
     dispatch(actions.fetchDetails(id, genre))
-  }, [dispatch, id, genre])
+  }, [dispatch, props])
 
   return (
-    <WidthContext.Provider
+    <MovieInfoContext.Provider
       value={{
-        width: width
+        width: width,
+        details: details,
+        id: props.match.params.id.match(/^[0-9]*/),
+        genre: props.match.params.genre,
       }}
     >
       <div className='info-page-wrapper'>
         {details ?
           <>
-            <GeneralInfo props={props} details={details}></GeneralInfo>
+            <GeneralInfo></GeneralInfo>
             <div className='info-content-wrapper'>
-              <Casts casts={details.credits.cast}></Casts>
-              <SideInfo details={details}></SideInfo>
+              <Casts></Casts>
+              <SideInfo></SideInfo>
             </div>
           </>
           : null
         }
       </div>
-    </WidthContext.Provider>
+    </MovieInfoContext.Provider>
   )
 }
 
